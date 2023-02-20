@@ -3,7 +3,7 @@ import pandas as pd
 #integrate several dataset into one dataset
 #input: several datasets
 #output: one dataset
-datasets_names = ["aggression_parsed_dataset.csv","attack_parsed_dataset.csv","toxicity_parsed_dataset.csv","kaggle_parsed_dataset.csv","twitter_parsed_dataset.csv","youtube_parsed_dataset.csv"]
+datasets_names = ["aggression_parsed_dataset.csv","attack_parsed_dataset.csv"]
 def merge_dataset(df1,df2):
     for index, row in df2.iterrows():
         if(row['Text'] not in df1['Text'].values):
@@ -45,7 +45,7 @@ def main():
         print("Merged"+ datasets_names[i]+ "dataset size: ",df.shape)
         #clean df2
         del df2
-    df.to_csv("try_merged_dataset.csv",index=False)
+    df.to_csv("merging/attack_aggression_merged_dataset.csv",index=False)
     print("Merged dataset size: ",df.shape)
 
 if __name__ == "__main__":
