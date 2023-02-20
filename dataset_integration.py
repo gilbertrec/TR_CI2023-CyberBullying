@@ -41,9 +41,11 @@ def main():
         df2 = pd.read_csv("dataset/"+datasets_names[i])
         df2 = format_dataset(df2)
         print("Merging dataset: ",datasets_names[i])
-        merge_dataset(df,df2)
+        df = merge_dataset(df,df2)
         print("Merged"+ datasets_names[i]+ "dataset size: ",df.shape)
-    df.to_csv("merged_dataset.csv",index=False)
+        #clean df2
+        del df2
+    df.to_csv("try_merged_dataset.csv",index=False)
     print("Merged dataset size: ",df.shape)
 
 if __name__ == "__main__":
