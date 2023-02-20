@@ -1,0 +1,8 @@
+FILTRAGGIO TUPLE:
+
+Aggression: 78.23% con label 0         21.77% con label 1
+
+Attack: 80.81% con label 0 		    19.19% con label 1
+
+Toxicity: 85.50% con label 0		    14.50% con label 1
+
