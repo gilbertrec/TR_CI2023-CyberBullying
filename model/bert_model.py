@@ -66,11 +66,6 @@ def convert_data_to_examples(train, test, DATA_COLUMN, LABEL_COLUMN):
 
     return train_InputExamples, validation_InputExamples
 
-    train_InputExamples, validation_InputExamples = convert_data_to_examples(train,
-                                                                             test,
-                                                                             'DATA_COLUMN',
-                                                                             'LABEL_COLUMN')
-
 
 def model_conversion(train,test):
     #model definition and loading bert model
@@ -113,8 +108,8 @@ def model_conversion(train,test):
 
 
 def model_training(train_data,validation_data,model):
+
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08, clipnorm=1.0),
-                  loss=model.compute_loss,  # can also use any keras loss fn
                   metrics=['accuracy'])
 
     model.fit(train_data, epochs=2, validation_data=validation_data)
@@ -125,16 +120,27 @@ def model_saving(model):
     model.save_pretrained('bert_model')
 
 def model_loading():
+
+
     # train and test dataset
-    train = tf.keras.preprocessing.text_dataset_from_directory(
-        'dataset_prepared/merged_dataset', batch_size=30000, validation_split=0.2,
-        subset='training', seed=123)
-    test = tf.keras.preprocessing.text_dataset_from_directory(
-        'dataset_prepared/merged_dataset', batch_size=30000, validation_split=0.2,
-        subset='validation', seed=123)
+    data = pd.read_csv('../merging/dataset_subset.csv')
+    # split dataset for training and testing
+    train = data.sample(frac=0.8, random_state=0)
+    test = data.drop(train.index)
+    #convert to tensors
+    train = tf.data.Dataset.from_tensor_slices((train['Text'].values, train['class_label'].values))
+    test = tf.data.Dataset.from_tensor_slices((test['Text'].values, test['class_label'].values))
     return train, test
+
 def model_pipeline():
     train, test = model_loading()
     train_data, validation_data, model = model_conversion(train, test)
     model = model_training(train_data, validation_data, model)
     model_saving(model)
+
+
+def main():
+    model_pipeline()
+
+if __name__ == "__main__":
+    main()
