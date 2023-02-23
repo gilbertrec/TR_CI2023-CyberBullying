@@ -99,10 +99,10 @@ def model_conversion(train,test):
     train_InputExamples, validation_InputExamples = convert_data_to_examples(train, test, DATA_COLUMN, LABEL_COLUMN)
 
     train_data = convert_examples_to_tf_dataset(list(train_InputExamples), tokenizer)
-    train_data = train_data.shuffle(100).batch(32).repeat(2)
+    train_data = train_data.shuffle(100).batch(16).repeat(2)
 
     validation_data = convert_examples_to_tf_dataset(list(validation_InputExamples), tokenizer)
-    validation_data = validation_data.batch(32)
+    validation_data = validation_data.batch(16)
 
     return train_data, validation_data, model
 
@@ -112,7 +112,7 @@ def model_training(train_data,validation_data,model):
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08, clipnorm=1.0),
                   metrics=['accuracy'])
 
-    model.fit(train_data, epochs=2, validation_data=validation_data)
+    model.fit(train_data, epochs=10, validation_data=validation_data)
 
     return model
 
@@ -121,12 +121,24 @@ def model_saving(model):
 
 def model_loading():
 
-
     # train and test dataset
-    data = pd.read_csv('../merging/dataset_subset.csv')
-    # split dataset for training and testing
-    train = data.sample(frac=0.8, random_state=0)
-    test = data.drop(train.index)
+    data = pd.read_csv('../merging/dataset.csv')
+    #take only observations with class label non empty
+    data = data[data['class_label'].notna()]
+
+    #split dataset in each class label
+    data_0 = data[data['class_label'] == 0]
+    data_1 = data[data['class_label'] == 1]
+
+    #setting 80% of data for training and 20% for testing, half for each class label
+    train_0 = data_0.sample(frac=0.8, random_state=0)
+    test_0 = data_0.drop(train_0.index)
+    train_1 = data_1.sample(frac=0.8, random_state=0)
+    test_1 = data_1.drop(train_1.index)
+
+    # merge train and test dataset
+    train = pd.concat([train_0, train_1])
+    test = pd.concat([test_0, test_1])
     #convert to tensors
     train = tf.data.Dataset.from_tensor_slices((train['Text'].values, train['class_label'].values))
     test = tf.data.Dataset.from_tensor_slices((test['Text'].values, test['class_label'].values))
