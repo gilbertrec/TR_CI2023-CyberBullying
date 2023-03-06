@@ -31,11 +31,13 @@ The model in the repo is a BERT model that has been trained to make binary class
 The following sections will explain briefly how to gain access to and use the model in Python.
 ## **Requirements**
 To begin, the following packages are required to run the model:
+- *tensorflow*
 - *tensorflow_addons*
 - *transformers*
 
 And they can be installed using *pip* with the following commands:
 ```
+    pip install tensorflow
     pip install tensorflow_addons
     pip install transformers
 ```
@@ -50,7 +52,7 @@ The following snippet shows an example of how load it:
     # Import of the needed libraries
     import tensorflow as tf
     from tensorflow_addons.optimizers import AdamW
-    from transformers import AutoTokenizer,TFRobertaModel
+    from transformers import AutoTokenizer, TFRobertaModel
     import transformers
 
     # Load of the model
