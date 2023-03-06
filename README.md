@@ -53,10 +53,6 @@ The following snippet shows an example of how load it:
     from transformers import AutoTokenizer,TFRobertaModel
     import transformers
 
-    # Libraries not needed for the loading, but useful for the next steps
-    import pandas as pd
-    import numpy as np
-
     # Load of the model
     model = tf.keras.models.load_model('MODEL_PATH/model32_0.35_1e-05_5e-07.h5',custom_objects={"TFRobertaModel": transformers.TFRobertaModel})
 ```
