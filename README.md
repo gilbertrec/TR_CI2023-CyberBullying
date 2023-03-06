@@ -49,6 +49,7 @@ The following snippet shows an example of how load it:
 ```python
     # Import of the needed libraries
     import tensorflow as tf
+    from tensorflow_addons.optimizers import AdamW
     from transformers import AutoTokenizer,TFRobertaModel
     import transformers
 
